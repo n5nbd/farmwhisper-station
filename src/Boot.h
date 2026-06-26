@@ -6,6 +6,7 @@ namespace FW
   {
   public:
     static void begin();
+    static void loop();
 
   private:
     static void printBanner();

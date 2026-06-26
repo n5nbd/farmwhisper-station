@@ -3,16 +3,22 @@
 
 #include "Boot.h"
 #include "Logger.h"
+#include "Heartbeat.h"
 #include "BuildInfo.h"
 
 namespace FW
 {
-  void Boot::begin()
-  {
-    Logger::begin();
+    void Boot::begin()
+    {
+      Logger::begin();
 
-    printBanner();
-  }
+      printBanner();
+    } 
+
+    void Boot::loop()
+    {
+      Heartbeat::update();
+    }
 
   void Boot::printBanner()
   {

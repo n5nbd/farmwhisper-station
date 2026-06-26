@@ -1,5 +1,4 @@
 #include "src/Boot.h"
-#include "src/Heartbeat.h"
 
 void setup()
 {
@@ -8,5 +7,5 @@ void setup()
 
 void loop()
 {
-  FW::Heartbeat::update();
+  FW::Boot::loop();
 }
