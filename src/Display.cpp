@@ -6,6 +6,7 @@
 #include "Display.h"
 #include "BootScreen.h"
 #include "BuildInfo.h"
+#include "Station.h"
 
 namespace FW
 {
@@ -93,10 +94,16 @@ namespace FW
     oled.println("Coop Station");
     oled.println();
     oled.println("Boot checks");
-    oled.println("OLED     OK");
+    oled.print("OLED     ");
+    oled.println(Station::statusText(Station::display()));
+
     oled.println("I2C      OK");
-    oled.println("Radio    WAIT");
-    oled.println("Sensors  WAIT");
+
+    oled.print("Radio    ");
+    oled.println(Station::statusText(Station::radio()));
+
+    oled.print("Sensors  ");
+    oled.println(Station::statusText(Station::sensors()));
 
     oled.display();
   }
@@ -115,8 +122,12 @@ namespace FW
     oled.println(FW_VERSION);
     oled.println();
     oled.println("Status: READY");
-    oled.println("Radio : idle");
-    oled.println("Sensors: 0");
+
+    oled.print("Radio : ");
+    oled.println(Station::statusText(Station::radio()));
+
+    oled.print("Sensors: ");
+    oled.println(Station::statusText(Station::sensors()));
 
     oled.display();
   }

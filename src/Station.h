@@ -20,6 +20,8 @@ namespace FW
         static Status display();
         static Status sensors();
 
+        static const char* statusText(Status status);
+
     private:
         static Status m_radio;
         static Status m_display;

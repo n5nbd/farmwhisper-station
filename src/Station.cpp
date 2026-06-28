@@ -31,4 +31,22 @@ namespace FW
     {
         return m_sensors;
     }
+    const char* Station::statusText(Status status)
+    {
+        switch (status)
+        {
+            case Status::OK:
+                return "OK";
+
+            case Status::Warning:
+                return "WARN";
+
+            case Status::Error:
+                return "ERROR";
+
+            case Status::Unknown:
+            default:
+                return "--";
+        }
+    }
 }

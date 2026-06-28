@@ -14,9 +14,9 @@ namespace FW
     {
       Logger::begin();
       Station::begin();
+      Display::begin();
 
       printBanner();
-      Display::begin();
     } 
 
     void Boot::loop()
