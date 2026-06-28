@@ -5,7 +5,6 @@
 #include <Fonts/FreeSansBold9pt7b.h>
 
 #include "Display.h"
-#include "BootScreen.h"
 #include "BuildInfo.h"
 #include "Station.h"
 #include "assets/RoosterLogo.h"
