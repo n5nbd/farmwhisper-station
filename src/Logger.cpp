@@ -8,13 +8,7 @@ namespace FW
     void Logger::begin()
     {
         Serial.begin(115200);
-
-        while (!Serial)
-        {
-            delay(10);
-        }
-
-        delay(500);
+        delay(100);
     }
 
     void Logger::print(const char *text)
