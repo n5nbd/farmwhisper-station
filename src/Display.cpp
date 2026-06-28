@@ -2,11 +2,14 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
+#include <Fonts/FreeSansBold9pt7b.h>
 
 #include "Display.h"
 #include "BootScreen.h"
 #include "BuildInfo.h"
 #include "Station.h"
+#include "assets/RoosterLogo.h"
+
 
 namespace FW
 {
@@ -76,12 +79,40 @@ namespace FW
     return ready;
   }
 
-  void Display::showSplash()
-  {
+void Display::showSplash()
+{
     oled.clearDisplay();
-    oled.drawBitmap(0, 0, BOOT_SCREEN_128X64, 128, 64, SH110X_WHITE);
+
+    // Rooster logo
+    oled.drawBitmap(
+        0, 12,
+        roosterLogo,
+        ROOSTER_LOGO_WIDTH,
+        ROOSTER_LOGO_HEIGHT,
+        SH110X_WHITE
+    );
+
+    oled.setTextColor(SH110X_WHITE);
+
+    // Product name
+    oled.setFont(&FreeSansBold9pt7b);
+    oled.setTextSize(1);
+
+    oled.setCursor(38, 18);
+    oled.println("FARM");
+
+    oled.setCursor(38, 36);
+    oled.println("WHISPER");
+
+    // Product type
+    oled.setFont();
+    oled.setTextSize(1);
+
+    oled.setCursor(40, 52);
+    oled.println("COOP STATION");
+
     oled.display();
-  }
+}
 
   void Display::showBootChecks()
   {
@@ -94,6 +125,7 @@ namespace FW
     oled.println("Coop Station");
     oled.println();
     oled.println("Boot checks");
+
     oled.print("OLED     ");
     oled.println(Station::statusText(Station::display()));
 
@@ -118,8 +150,10 @@ namespace FW
     oled.println("FarmWhisper");
     oled.println("Coop Station");
     oled.println();
+
     oled.print("Version ");
     oled.println(FW_VERSION);
+
     oled.println();
     oled.println("Status: READY");
 
