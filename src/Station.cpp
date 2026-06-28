@@ -1,94 +1,77 @@
 #include "Station.h"
+#include "Radio.h"
 
-namespace FW
-{
-  /*
-    Cached radio subsystem status.
+namespace FW {
 
-    Radio support is not active yet, so it starts as Unknown until the radio
-    module is brought online and can report its own health.
-  */
-  Status Station::m_radio = Status::Unknown;
+/*
+ * Cached subsystem health.
+ *
+ * These defaults describe a board before startup has proved anything. Boot and
+ * individual modules promote them as hardware comes online.
+ */
+Status Station::m_radio = Status::Unknown;
+Status Station::m_display = Status::Unknown;
+Status Station::m_sensors = Status::Unknown;
 
-  /*
-    Cached display subsystem status.
-
-    This gives the rest of the firmware one shared place to ask how the local
-    screen is doing.
-  */
-  Status Station::m_display = Status::Unknown;
-
-  /*
-    Cached sensor subsystem status.
-
-    Sensors are not active yet, so this remains Unknown until real sensor
-    modules are added.
-  */
-  Status Station::m_sensors = Status::Unknown;
-
-  /*
-    Initialize station-level subsystem state.
-  */
-  void Station::begin()
-  {
+void Station::begin() {
+    /*
+     * Display is currently treated as OK because the existing Display module
+     * fails quietly if no OLED is present and does not yet report hardware
+     * status back to Station. A future Display::isAvailable() can make this more
+     * exact without changing callers.
+     */
     m_display = Status::OK;
     m_radio = Status::Unknown;
     m_sensors = Status::Unknown;
-  }
-
-  /*
-    Refresh station-level state.
-
-    Empty for now, but this gives us the right place to aggregate subsystem
-    health later without changing the main firmware loop.
-  */
-  void Station::update()
-  {
-  }
-
-  /*
-    Return current radio subsystem status.
-  */
-  Status Station::radio()
-  {
-    return m_radio;
-  }
-
-  /*
-    Return current display subsystem status.
-  */
-  Status Station::display()
-  {
-    return m_display;
-  }
-
-  /*
-    Return current sensor subsystem status.
-  */
-  Status Station::sensors()
-  {
-    return m_sensors;
-  }
-
-  /*
-    Convert internal status values into short text for display and logs.
-  */
-  const char* Station::statusText(Status status)
-  {
-    switch (status)
-    {
-      case Status::OK:
-        return "OK";
-
-      case Status::Warning:
-        return "WARN";
-
-      case Status::Error:
-        return "ERROR";
-
-      case Status::Unknown:
-      default:
-        return "--";
-    }
-  }
 }
+
+void Station::update() {
+    /*
+     * The radio can fail during runtime even after a clean boot. For this first
+     * prototype we only track whether it initialized. Later, repeated TX/RX
+     * errors can promote radio status to Warning or Error.
+     */
+    if (Radio::stats().initialized) {
+        m_radio = Status::OK;
+    }
+}
+
+void Station::setRadio(Status status) {
+    m_radio = status;
+}
+
+void Station::setDisplay(Status status) {
+    m_display = status;
+}
+
+void Station::setSensors(Status status) {
+    m_sensors = status;
+}
+
+Status Station::radio() {
+    return m_radio;
+}
+
+Status Station::display() {
+    return m_display;
+}
+
+Status Station::sensors() {
+    return m_sensors;
+}
+
+const char* Station::statusText(Status status) {
+    switch (status) {
+        case Status::OK:
+            return "OK";
+        case Status::Warning:
+            return "WARN";
+        case Status::Error:
+            return "ERROR";
+        case Status::Unknown:
+        default:
+            return "--";
+    }
+}
+
+} // namespace FW

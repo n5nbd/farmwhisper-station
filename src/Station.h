@@ -1,71 +1,55 @@
 #pragma once
 
-namespace FW
-{
-  /*
-    Shared health state used by station subsystems.
+namespace FW {
 
-    Keeping this small and generic lets Display, Radio, Sensors, and future
-    modules report status in the same language.
-  */
-  enum class Status
-  {
+/*
+ * Shared health state used by station subsystems.
+ *
+ * Keeping this small and generic lets Display, Radio, Sensors, and future
+ * modules report status in the same language. Detailed diagnostics stay inside
+ * each module; Station only publishes the coarse health that other modules need
+ * for boot screens, logs, and future remote status reports.
+ */
+enum class Status {
     Unknown,
     OK,
     Warning,
     Error
-  };
+};
 
-  /*
-    Station tracks the overall state of this FarmWhisper device.
-
-    It provides one place for subsystem status so display, logging, and future
-    radio reports can all agree on what the station thinks is happening.
-  */
-  class Station
-  {
-  public:
-    /*
-      Initialize station-level state.
-    */
+/*
+ * Station tracks the overall state of this FarmWhisper device.
+ *
+ * The station model is intentionally not a hardware driver. It is a central
+ * status board. Modules such as Radio and Display own their own implementation,
+ * then Station exposes enough shared state for the rest of the firmware to make
+ * consistent decisions and show consistent status text.
+ */
+class Station {
+public:
+    /* Initialize station-level state. */
     static void begin();
 
-    /*
-      Refresh station-level state.
-
-      This should stay non-blocking so it can be called every loop.
-    */
+    /* Refresh station-level state. This must stay non-blocking. */
     static void update();
 
-    /*
-      Current radio subsystem status.
-    */
+    /* Explicit setters let Boot record initialization results as they happen. */
+    static void setRadio(Status status);
+    static void setDisplay(Status status);
+    static void setSensors(Status status);
+
+    /* Current subsystem status values. */
     static Status radio();
-
-    /*
-      Current display subsystem status.
-    */
     static Status display();
-
-    /*
-      Current sensor subsystem status.
-    */
     static Status sensors();
 
-    /*
-      Convert a status enum into display/log-friendly text.
-    */
+    /* Convert status into compact OLED/log text. */
     static const char* statusText(Status status);
 
-  private:
-    /*
-      Cached subsystem health values.
-
-      Stored centrally so other modules can read status without owning or
-      directly probing each subsystem.
-    */
+private:
     static Status m_radio;
     static Status m_display;
     static Status m_sensors;
-  };
-}
+};
+
+} // namespace FW
