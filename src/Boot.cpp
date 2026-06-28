@@ -6,12 +6,14 @@
 #include "Heartbeat.h"
 #include "BuildInfo.h"
 #include "Display.h"
+#include "Station.h"
 
 namespace FW
 {
     void Boot::begin()
     {
       Logger::begin();
+      Station::begin();
 
       printBanner();
       Display::begin();
@@ -19,6 +21,7 @@ namespace FW
 
     void Boot::loop()
     {
+      Station::update();
       Display::update();
       Heartbeat::update();
     }
