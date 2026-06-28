@@ -1,3 +1,37 @@
+/*
+    ---------------------------------------------------------------------------
+    FarmWhisper Rooster Logo
+    ---------------------------------------------------------------------------
+
+    This file contains the monochrome bitmap used by the FarmWhisper splash
+    screen and other UI elements.
+
+    Why is this stored as a C header instead of an image file?
+
+      • The bitmap is compiled directly into flash memory (PROGMEM).
+      • No filesystem or SD card is required.
+      • The display can render immediately at boot.
+      • Keeping artwork in source control makes firmware builds completely
+        reproducible.
+
+    Asset Notes
+    ---------------------------------------------------------------------------
+
+      Format      : 1-bit monochrome, 40 x 40 pixels
+      Orientation : Native for SSD1306-compatible OLED displays
+      Storage     : PROGMEM (Flash)
+
+    If this artwork is replaced:
+
+      1. Generate a 1-bit monochrome bitmap.
+      2. Preserve the existing dimensions unless the display code is updated.
+      3. Verify the image is centered and readable on actual hardware.
+      4. Commit both the source artwork (if available) and the generated header.
+
+    This file intentionally contains data only. Rendering belongs in
+    Display.cpp so artwork and display logic remain separate.
+*/
+
 #pragma once
 
 #include <Arduino.h>
