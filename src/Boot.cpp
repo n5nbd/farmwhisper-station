@@ -5,6 +5,7 @@
 #include "Logger.h"
 #include "Heartbeat.h"
 #include "BuildInfo.h"
+#include "Display.h"
 
 namespace FW
 {
@@ -13,10 +14,12 @@ namespace FW
       Logger::begin();
 
       printBanner();
+      Display::begin();
     } 
 
     void Boot::loop()
     {
+      Display::update();
       Heartbeat::update();
     }
 
@@ -24,7 +27,7 @@ namespace FW
   {
     Logger::println("");
     Logger::println("========================================");
-    Logger::println("      Farm Whisperer");
+    Logger::println("      FarmWhisper");
     Logger::println("      fw-station");
     Logger::print("      Version ");
     Logger::println(FW_VERSION);
